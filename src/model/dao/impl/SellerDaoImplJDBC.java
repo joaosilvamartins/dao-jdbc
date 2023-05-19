@@ -200,7 +200,6 @@ public class SellerDaoImplJDBC implements SellerDao{
 				list.add(seller);
 			}
 			return list;
-		
 		}
 		catch(SQLException e) {
 			throw new DbException(e.getMessage());
