@@ -69,7 +69,28 @@ public class SellerDaoImplJDBC implements SellerDao{
 	@Override
 	public void update(Seller seller) {
 		
-		
+		PreparedStatement st = null;
+		try {
+			st= conn.prepareStatement(
+					"update seller "
+					+ "set name = ?, Email = ?, BirthDate = ?, BaseSalary = ?, DepartmentId = ? "
+					+ "where Id = ?");
+			
+			st.setString(1, seller.getName());
+			st.setString(2, seller.getEmail());
+			st.setDate(3, new java.sql.Date(seller.getBirthdate().getTime()));
+			st.setDouble(4, seller.getBaseSalary());
+			st.setInt(5, seller.getDepartment().getId());
+			st.setInt(6, seller.getId());
+			
+			st.executeUpdate();
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 	}
 
 	@Override
@@ -111,7 +132,6 @@ public class SellerDaoImplJDBC implements SellerDao{
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
-		
 	}
 
 	private Seller instanciateSeller(ResultSet rs, Department dp) throws SQLException {
